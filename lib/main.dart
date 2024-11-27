@@ -1,8 +1,8 @@
 
-import 'package:f08_eshop_app/pages/product_detail_page.dart';
-import 'package:f08_eshop_app/pages/product_form_page.dart';
-import 'package:f08_eshop_app/pages/products_overview_page.dart';
-import 'package:f08_eshop_app/utils/app_routes.dart';
+import '/pages/product_detail_page.dart';
+import '/pages/product_form_page.dart';
+import '/pages/products_overview_page.dart';
+import '/utils/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

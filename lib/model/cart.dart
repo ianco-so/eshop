@@ -1,4 +1,4 @@
-import 'package:f08_eshop_app/model/product.dart';
+import 'product.dart';
 import 'package:flutter/material.dart';
 
 class Cart with ChangeNotifier {

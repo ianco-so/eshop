@@ -1,9 +1,8 @@
-import 'package:f08_eshop_app/model/product_list.dart';
-import 'package:f08_eshop_app/utils/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../model/product.dart';
+import '../model/product_list.dart';
+import '../utils/app_routes.dart';
 
 class ProductItem extends StatelessWidget {
   @override

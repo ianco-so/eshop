@@ -1,4 +1,4 @@
-import 'package:f08_eshop_app/model/cart.dart';
+import '../model/cart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

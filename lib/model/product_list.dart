@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:f08_eshop_app/data/dummy_data.dart';
-import 'package:f08_eshop_app/model/product.dart';
+import 'product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
@@ -36,7 +35,6 @@ class ProductList with ChangeNotifier {
 
   Future<List<Product>> fetchProducts() async {
     List<Product> products = [];
-
     try {
       final response = await http.get(Uri.parse('$_baseUrl/products.json'));
 
