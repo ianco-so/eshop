@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+
+import '../utils/urls.dart';
 class Product with ChangeNotifier {
-  final _baseUrl = 'https://mini-projeto-4-eb9f4-default-rtdb.firebaseio.com/';
+  // final _baseUrl = 'https://mini-projeto-4-eb9f4-default-rtdb.firebaseio.com/';
 
   final String id;
   final String title;
@@ -56,7 +58,7 @@ class Product with ChangeNotifier {
   Future<void> toggleFavorite() async {
     // print('Toggling favorite status for product $id');
     var response = await http.patch(
-      Uri.parse('$_baseUrl/products/$id.json'),
+      Uri.parse('${Urls.BASE_URL}/products/$id.json'),
       body: jsonEncode({'isFavorite': !isFavorite}),
     );
     if (response.statusCode != 200) throw Exception('Failed to update favorite status');

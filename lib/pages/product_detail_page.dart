@@ -1,6 +1,7 @@
-import '../model/cart.dart';
+// import '../model/cart.dart';
+import '../utils/app_routes.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart';
 
 import '../model/product.dart';
 
@@ -13,7 +14,7 @@ class ProductDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     // Retrieve the product passed via route arguments
     final Product product = ModalRoute.of(context)!.settings.arguments as Product;
-    final cart = Provider.of<Cart>(context);
+    // final cart = Provider.of<Cart>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(product.title),
@@ -71,25 +72,41 @@ class ProductDetailPage extends StatelessWidget {
             const SizedBox(height: 20),
 
             // Add to Cart Button
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 16),
+            //   child: ElevatedButton.icon(
+            //     onPressed: () {
+            //       cart.addProduct(product);
+            //       ScaffoldMessenger.of(context).showSnackBar(
+            //         SnackBar(
+            //           content: Text('${product.title} added to cart'),
+            //           duration: const Duration(seconds: 2),
+            //         ),
+            //       );
+            //     },
+            //     icon: const Icon(Icons.add_shopping_cart),
+            //     label: const Text('Add to Cart'),
+            //     style: ElevatedButton.styleFrom(
+            //       padding: const EdgeInsets.symmetric(vertical: 16),
+            //       textStyle: const TextStyle(fontSize: 18),
+            //     ),
+            //   ),
+            // ),
+
+            // Edit Product Button (open a new page to edit the product)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16), 
               child: ElevatedButton.icon(
-                onPressed: () {
-                  cart.addProduct(product);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('${product.title} added to cart'),
-                      duration: const Duration(seconds: 2),
-                    ),
-                  );
+                onPressed: () async {
+                  final returnedProduct = await Navigator.of(context).pushNamed(AppRoutes.PRODUCT_FORM, arguments: product);
                 },
-                icon: const Icon(Icons.add_shopping_cart),
-                label: const Text('Add to Cart'),
+                icon: const Icon(Icons.edit),
+                label: const Text('Edit Product'),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   textStyle: const TextStyle(fontSize: 18),
                 ),
-              ),
+              )
             ),
           ],
         ),

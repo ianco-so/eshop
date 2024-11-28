@@ -74,19 +74,20 @@ class _ProductFormPageState extends State<ProductFormPage> {
   }
 
   void _submitForm() {
+    print('Form Data: $_formData');
+    // return;
     final isValid = _formKey.currentState?.validate() ?? false;
 
     if (!isValid) {
       return;
     }
-
     _formKey.currentState?.save();
 
     Provider.of<ProductList>(
       context,
       listen: false,
     ).saveProduct(_formData).then((value) {
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(value);
     });
   }
 
@@ -109,7 +110,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
           child: ListView(
             children: [
               TextFormField(
-                initialValue: _formData['name']?.toString(),
+                initialValue: _formData['title']?.toString(),
                 decoration: InputDecoration(
                   labelText: 'Nome',
                 ),
@@ -117,15 +118,15 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_priceFocus);
                 },
-                onSaved: (name) => _formData['name'] = name ?? '',
-                validator: (_name) {
-                  final name = _name ?? '';
+                onSaved: (title) => _formData['title'] = title ?? '',
+                validator: (_title) {
+                  final title = _title ?? '';
 
-                  if (name.trim().isEmpty) {
+                  if (title.trim().isEmpty) {
                     return 'Nome é obrigatório';
                   }
 
-                  if (name.trim().length < 3) {
+                  if (title.trim().length < 3) {
                     return 'Nome precisa no mínimo de 3 letras.';
                   }
 
