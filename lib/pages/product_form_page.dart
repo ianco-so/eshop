@@ -74,21 +74,24 @@ class _ProductFormPageState extends State<ProductFormPage> {
   }
 
   void _submitForm() {
-    print('Form Data: $_formData');
-    // return;
     final isValid = _formKey.currentState?.validate() ?? false;
 
     if (!isValid) {
       return;
     }
     _formKey.currentState?.save();
-
-    Provider.of<ProductList>(
-      context,
-      listen: false,
-    ).saveProduct(_formData).then((value) {
-      Navigator.of(context).pop(value);
-    });
+    final productList = Provider.of<ProductList>(context, listen: false,);
+    if (_formData['id'] == null) {
+      productList.addProduct(_formData).then((value) {Navigator.of(context).pop(value);});
+    } else {
+      final product = Product.fromJson(
+        _formData['id'].toString(),
+        _formData
+      );
+      product.updateProduct(product);
+      productList.updateProduct(product);
+      Navigator.of(context).pop();
+    }
   }
 
   @override

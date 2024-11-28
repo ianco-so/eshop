@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:math';
+
 
 import '../utils/urls.dart';
 
@@ -37,107 +37,57 @@ class ProductList with ChangeNotifier {
 
   Future<List<Product>> fetchProducts() async {
     List<Product> products = [];
-    try {
-      final response = await http.get(Uri.parse('${Urls.BASE_URL}/products.json'));
+    final response = await http.get(Uri.parse('${Urls.BASE_URL}/products.json'));
 
-      if (response.statusCode == 200) {
-        Map<String, dynamic> _productsJson = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      Map<String, dynamic> _productsJson = jsonDecode(response.body);
 
-        _productsJson.forEach((id, product) {
-          products.add(Product.fromJson(id, product));
-        });
-        _items = products;
-        return products;
-      } else {
-        throw Exception("Aconteceu algum erro na requisição");
-      }
-    } catch (e) {
-      throw e;
+      _productsJson.forEach((id, product) {
+        products.add(Product.fromJson(id, product));
+      });
+      _items = products;
+      return products;
+    } else {
+      throw Exception("Aconteceu algum erro na requisição");
     }
   }
 
   Future<Product> addProduct(Map<String, Object> data) async {
-    try {
+    final productWithBlackId = Product(
+      id: '',
+      title: data['title'] as String,
+      description: data['description'] as String,
+      price: data['price'] as double,
+      imageUrl: data['imageUrl'] as String,
+    );
+    var response = await http.post(Uri.parse('${Urls.BASE_URL}/products.json'),
+        body: jsonEncode(productWithBlackId.toJson()));
+
+    if (response.statusCode == 200) {
+      final id = jsonDecode(response.body)['name'];
       final product = Product(
-        id: Random().nextDouble().toString(),
-        title: data['title'] as String,
-        description: data['description'] as String,
-        price: data['price'] as double,
-        imageUrl: data['imageUrl'] as String,
+        id: id,
+        title: productWithBlackId.title,
+        description: productWithBlackId.description,
+        price: productWithBlackId.price,
+        imageUrl: productWithBlackId.imageUrl,
       );
-      var response = await http.post(Uri.parse('${Urls.BASE_URL}/products.json'),
-          body: jsonEncode(product.toJson()));
-
-      if (response.statusCode == 200) {
-        final id = jsonDecode(response.body)['name'];
-        _items.add(Product(
-            id: id,
-            title: product.title,
-            description: product.description,
-            price: product.price,
-            imageUrl: product.imageUrl));
-        notifyListeners();
-      } else {
-        throw Exception("Aconteceu algum erro na requisição");
-      }
+      product.syncProduct();
+      _items.add(product);
+      notifyListeners();
       return product;
-    } catch (e) {
-      rethrow;
-    }
-    // print('executa em sequencia');
-  }
-
-  Future<Product> updateProduct(Map<String, Object> data) async {
-
-    try {
-      final product = Product(
-        id: data['id'] as String,
-        title: data['title'] as String,
-        description: data['description'] as String,
-        price: data['price'] as double,
-        imageUrl: data['imageUrl'] as String,
-      );
-
-      final response = await http.put(Uri.parse('${Urls.BASE_URL}/products/${product.id}.json'),
-          body: jsonEncode(product.toJson()));
-
-      if (response.statusCode == 200) {
-        final index = _items.indexWhere((p) => p.id == product.id);
-        if (index >= 0) {
-          _items[index] = product;
-          notifyListeners();
-        }
-      } else {
-        throw Exception("Aconteceu algum erro durante a requisição");
-      }
-      return product;
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  Future<Product> saveProduct(Map<String, Object> data) {
-    bool hasId = data['id'] != null;
-    if (hasId) {
-      return updateProduct(data);
-      // return Future.value();
     } else {
-      return addProduct(data);
+      throw Exception("Aconteceu algum erro na requisição");
     }
   }
 
   Future<void> removeProduct(Product product) async {
-    try {
-      final response =
-          await http.delete(Uri.parse('${Urls.BASE_URL}/products/${product.id}.json'));
+    final response = await http.delete(Uri.parse('${Urls.BASE_URL}/products/${product.id}.json'));
 
-      if (response.statusCode == 200) {
-        removeProductFromList(product);
-      } else {
-        throw Exception("Aconteceu algum erro durante a requisição");
-      }
-    } catch (e) {
-      throw e;
+    if (response.statusCode == 200) {
+      removeProductFromList(product);
+    } else {
+      throw Exception("Aconteceu algum erro durante a requisição");
     }
   }
 
@@ -147,6 +97,18 @@ class ProductList with ChangeNotifier {
     if (index >= 0) {
       _items.removeWhere((p) => p.id == product.id);
       notifyListeners();
+      }
     }
+
+  void updateProduct(Product product) {
+    final index = _items.indexWhere((p) => p.id == product.id);
+    if (index >= 0) {
+      _items[index] = product;
+      notifyListeners();
+    }
+  }
+
+  Product findProductById(String productId) {
+    return _items.firstWhere((p) => p.id == productId);
   }
 }

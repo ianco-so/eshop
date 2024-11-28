@@ -27,7 +27,7 @@ class ProductItem extends StatelessWidget {
           ),
           onTap: () {
             Navigator.of(context)
-                .pushNamed(AppRoutes.PRODUCT_DETAIL, arguments: product);
+                .pushNamed(AppRoutes.PRODUCT_DETAIL, arguments: product.id);
           },
         ),
         footer: GridTileBar(

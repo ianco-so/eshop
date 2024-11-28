@@ -1,4 +1,7 @@
 // import '../model/cart.dart';
+import 'package:eshop/model/product_list.dart';
+import 'package:provider/provider.dart';
+
 import '../utils/app_routes.dart';
 import 'package:flutter/material.dart';
 // import 'package:provider/provider.dart';
@@ -7,17 +10,29 @@ import '../model/product.dart';
 
 class ProductDetailPage extends StatelessWidget {
   const ProductDetailPage({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     // Retrieve the product passed via route arguments
-    final Product product = ModalRoute.of(context)!.settings.arguments as Product;
+    final productId = ModalRoute.of(context)!.settings.arguments as String;
+    final productList = Provider.of<ProductList>(context);
+    final product = productList.findProductById(productId);
     // final cart = Provider.of<Cart>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(product.title),
+        actions: [
+          // Remove Product Button
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () {
+              productList.removeProduct(product);
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -97,8 +112,8 @@ class ProductDetailPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16), 
               child: ElevatedButton.icon(
-                onPressed: () async {
-                  final returnedProduct = await Navigator.of(context).pushNamed(AppRoutes.PRODUCT_FORM, arguments: product);
+                onPressed: () {
+                  Navigator.of(context).pushNamed(AppRoutes.PRODUCT_FORM, arguments: product);
                 },
                 icon: const Icon(Icons.edit),
                 label: const Text('Edit Product'),
