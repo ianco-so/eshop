@@ -28,19 +28,21 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
   @override
   Widget build(BuildContext context) {
     //final provider = Provider.of<ProductList>(context);
+    final user = Provider.of<User>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.pink,
         title: Text('Minha Loja'),
         actions: [
-          IconButton(
+          user.isLoggedIn ? IconButton(
             onPressed: () {
               Navigator.of(context).pushNamed(
                 AppRoutes.PRODUCT_FORM,
               );
             },
-            icon: Icon(Icons.add)
-          ),
+            icon: Icon(Icons.add),
+          )
+          : Container(),
           IconButton(
             onPressed: () {
               Navigator.of(context).pushNamed(

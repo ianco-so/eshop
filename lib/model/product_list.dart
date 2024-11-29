@@ -103,6 +103,7 @@ class ProductList with ChangeNotifier {
   void updateProduct(Product product) {
     final index = _items.indexWhere((p) => p.id == product.id);
     if (index >= 0) {
+      product.syncProduct();  
       _items[index] = product;
       notifyListeners();
     }
