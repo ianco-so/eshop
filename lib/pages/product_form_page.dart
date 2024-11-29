@@ -29,6 +29,13 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
   //O método é chamado pela primeira vez logo após o initState. Isso ocorre porque o widget precisa verificar se possui dependências herdadas.
   //Ele é utilizado para responder a mudanças no contexto ou dependências herdadas,
+  Product _product = Product(
+    id: '',
+    title: '',
+    description: '',
+    price: 0.0,
+    imageUrl: '',
+  );
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -37,14 +44,15 @@ class _ProductFormPageState extends State<ProductFormPage> {
       final arg = ModalRoute.of(context)?.settings.arguments;
 
       if (arg != null) {
-        final product = arg as Product;
-        _formData['id'] = product.id;
-        _formData['title'] = product.title;
-        _formData['price'] = product.price;
-        _formData['description'] = product.description;
-        _formData['imageUrl'] = product.imageUrl;
+        final productId = arg as String;
+        _product = Provider.of<ProductList>(context, listen: false).findProductById(productId);
+        _formData['id'] = _product.id;
+        _formData['title'] = _product.title;
+        _formData['price'] = _product.price;
+        _formData['description'] = _product.description;
+        _formData['imageUrl'] = _product.imageUrl;
 
-        _imageUrlController.text = product.imageUrl;
+        _imageUrlController.text = _product.imageUrl;
       }
     }
   }

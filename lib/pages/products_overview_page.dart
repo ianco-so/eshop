@@ -43,14 +43,15 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
             icon: Icon(Icons.add),
           )
           : Container(),
-          IconButton(
+          user.isLoggedIn ? IconButton(
             onPressed: () {
               Navigator.of(context).pushNamed(
                 AppRoutes.CART,
               );
             },
             icon: Icon(Icons.shopping_cart)
-          ),
+          )
+          : Container(),
           PopupMenuButton(
             icon: Icon(Icons.more_vert),
             itemBuilder: (_) => [
@@ -107,15 +108,15 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
               },
             ),
             // Orders
-            ListTile(
-              leading: Icon(Icons.shopping_bag),
+            user.isLoggedIn ? ListTile(
+              leading: Icon(Icons.shopping_cart),
               title: Text('Meus Pedidos'),
               onTap: () {
                 Navigator.of(context).pushNamed(
                   AppRoutes.ORDERS, // Define this route in your app routes
                 );
               },
-            ),
+            ) : Container(),
           ],
         ),
       ),

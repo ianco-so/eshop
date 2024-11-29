@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../model/product.dart';
 // import '../model/product_list.dart';
+import '../model/user.dart';
 import '../utils/app_routes.dart';
 
 class ProductItem extends StatelessWidget {
@@ -14,6 +15,7 @@ class ProductItem extends StatelessWidget {
 
     //PEGANDO CONTEUDO PELO PROVIDER
     final product = context.watch<Product>();
+    final user = Provider.of<User>(context);
     // final cart = Provider.of<Cart>(context);
 
     return ClipRRect(
@@ -55,14 +57,16 @@ class ProductItem extends StatelessWidget {
           //   icon: Icon(Icons.delete),
           //   color: Theme.of(context).colorScheme.secondary
           // ),
-          trailing: IconButton(
-            onPressed: () {  
-              //adicionando produto ao carrinho
-              Provider.of<Cart>(context, listen: false).addProduct(product);
-            }, 
-            icon: const Icon(Icons.add_shopping_cart_rounded),
-            color: Theme.of(context).colorScheme.secondary,
-          ),
+          trailing: user.isLoggedIn 
+            ? IconButton(
+              onPressed: () {  
+                //adicionando produto ao carrinho
+                Provider.of<Cart>(context, listen: false).addProduct(product);
+              }, 
+              icon: const Icon(Icons.add_shopping_cart_rounded),
+              color: Theme.of(context).colorScheme.secondary,
+            )
+            : Container(),
         ),
       ),
     );
