@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../components/product_grid.dart';
+import '../model/user.dart';
 import '../utils/app_routes.dart';
 
 enum FilterOptions {
@@ -26,7 +28,6 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
   @override
   Widget build(BuildContext context) {
     //final provider = Provider.of<ProductList>(context);
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.pink,
@@ -73,6 +74,39 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
             },
           ),
         ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.pink,
+              ),
+              child: Text(
+                'Minha Loja',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.person),
+              // title: Text(user.isLoggedIn ? '${user.username}' : 'Login'),
+              title: Consumer<User>(
+                builder: (ctx, user, _) => Text(
+                  user.isLoggedIn ? '${user.username}' : 'Login',
+                ),
+              ),
+              onTap: () {
+                Navigator.of(context).pushNamed(
+                  AppRoutes.PROFILE, // Define this route in your app routes
+                );
+              },
+            ),
+          ],
+        ),
       ),
       body: ProductGrid(_showOnlyFavorites),
     );

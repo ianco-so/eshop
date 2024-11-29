@@ -6,11 +6,11 @@ import '../utils/urls.dart';
 class Product with ChangeNotifier {
   // final _baseUrl = 'https://mini-projeto-4-eb9f4-default-rtdb.firebaseio.com/';
 
-  final String id;
-  final String title;
-  final String description;
-  final double price;
-  final String imageUrl;
+  String id;
+  String title;
+  String description;
+  double price;
+  String imageUrl;
   bool isFavorite;
 
   Product({
@@ -66,24 +66,29 @@ class Product with ChangeNotifier {
     notifyListeners();  
   }
 
-  Future<Product> updateProduct (Product product) async {
-    final response = await http.patch(
-      Uri.parse('${Urls.BASE_URL}/products/${product.id}.json'),
-      body: jsonEncode({
-        'id':           product.id,
-        'title':        product.title,
-        'description':  product.description,
-        'price':        product.price,
-        'imageUrl':     product.imageUrl,
-      }),
-    );
-    if (response.statusCode == 200) {
-      notifyListeners();
-      return product;
-    } else {
-      throw Exception('Failed to update product');
-    }
-  }
+  // Future<Product> updateProduct (Product product) async {
+  //   final response = await http.patch(
+  //     Uri.parse('${Urls.BASE_URL}/products/${product.id}.json'),
+  //     body: jsonEncode({
+  //       'id':           product.id,
+  //       'title':        product.title,
+  //       'description':  product.description,
+  //       'price':        product.price,
+  //       'imageUrl':     product.imageUrl,
+  //     }),
+  //   );
+  //   if (response.statusCode == 200) {
+  //     this.id = product.id;
+  //     this.title = product.title;
+  //     this.description = product.description;
+  //     this.price = product.price;
+  //     this.imageUrl = product.imageUrl;
+  //     notifyListeners();
+  //     return this;
+  //   } else {
+  //     throw Exception('Failed to update product');
+  //   }
+  // }
 
   Future<void> syncProduct() async {
     final response = await http.patch(

@@ -1,12 +1,7 @@
-// import '../model/cart.dart';
 import 'package:eshop/model/product_list.dart';
 import 'package:provider/provider.dart';
-
 import '../utils/app_routes.dart';
 import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
-
-import '../model/product.dart';
 
 class ProductDetailPage extends StatelessWidget {
   const ProductDetailPage({

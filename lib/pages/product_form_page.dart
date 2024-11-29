@@ -88,7 +88,6 @@ class _ProductFormPageState extends State<ProductFormPage> {
         _formData['id'].toString(),
         _formData
       );
-      product.updateProduct(product);
       productList.updateProduct(product);
       Navigator.of(context).pop();
     }
