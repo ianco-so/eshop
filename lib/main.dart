@@ -9,10 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'model/cart.dart';
+import 'model/order_list.dart';
 import 'model/product_list.dart';
 import 'model/user.dart';
 import 'pages/cart_page.dart';
 import 'pages/create_account_page.dart';
+import 'pages/orders_page.dart';
 
 
 void main() {
@@ -29,6 +31,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => ProductList()),
         ChangeNotifierProvider(create: (context) => Cart()), // Add the Cart provider
         ChangeNotifierProvider(create: (context) => User()),
+        ChangeNotifierProvider(create: (context) => OrderList()),
       ],
       child: MaterialApp(
         title: 'Minha Loja',
@@ -46,6 +49,7 @@ class MyApp extends StatelessWidget {
           AppRoutes.CART: (context) => const CartPage(),
           AppRoutes.PROFILE: (context) => const ProfilePage(),
           AppRoutes.CREATE_ACCOUNT: (context) => const CreateAccountPage(),
+          AppRoutes.ORDERS: (context) => const OrdersPage(),
         },
         debugShowCheckedModeBanner: false,
       ),

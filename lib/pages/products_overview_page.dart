@@ -95,7 +95,6 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
             ),
             ListTile(
               leading: Icon(Icons.person),
-              // title: Text(user.isLoggedIn ? '${user.username}' : 'Login'),
               title: Consumer<User>(
                 builder: (ctx, user, _) => Text(
                   user.isLoggedIn ? '${user.username}' : 'Login',
@@ -104,6 +103,16 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
               onTap: () {
                 Navigator.of(context).pushNamed(
                   AppRoutes.PROFILE, // Define this route in your app routes
+                );
+              },
+            ),
+            // Orders
+            ListTile(
+              leading: Icon(Icons.shopping_bag),
+              title: Text('Meus Pedidos'),
+              onTap: () {
+                Navigator.of(context).pushNamed(
+                  AppRoutes.ORDERS, // Define this route in your app routes
                 );
               },
             ),
