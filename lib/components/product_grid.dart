@@ -17,32 +17,32 @@ class ProductGrid extends StatelessWidget {
     late Future<List<Product>> _products = provider.fetchProducts();
 
     return FutureBuilder<List<Product>>(
-        future: _products,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(),); // Exibe um indicador de progresso enquanto os produtos estão sendo carregados
-          } else if (snapshot.hasError) {
-            return const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Vixe... algum erro aconteceu ao acessar a loja!",textAlign: TextAlign.center,style: TextStyle(fontSize: 16),),
-                ],
-              ),
-            );
-          } else if(snapshot.hasData) {
-            // Se os produtos foram carregados com sucesso, você pode acessá-los aqui
-            List<Product> products = snapshot.data!;
-            // print("ShowOnlyFavoritos: $_showOnlyFavoritos");
-            if (_showOnlyFavoritos) {
-              products = products.where((prod) => prod.isFavorite).toList();
-            }
-            return ProductGridView(products: products);
-          } else {
-            return Text("Nenhum produto cadastrado na loja!",);
+      future: _products,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator(),); // Exibe um indicador de progresso enquanto os produtos estão sendo carregados
+        } else if (snapshot.hasError) {
+          return const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Vixe... algum erro aconteceu ao acessar a loja!",textAlign: TextAlign.center,style: TextStyle(fontSize: 16),),
+              ],
+            ),
+          );
+        } else if(snapshot.hasData) {
+          // Se os produtos foram carregados com sucesso, você pode acessá-los aqui
+          List<Product> products = snapshot.data!;
+          // print("ShowOnlyFavoritos: $_showOnlyFavoritos");
+          if (_showOnlyFavoritos) {
+            products = products.where((prod) => prod.isFavorite).toList();
           }
-        });
+          return ProductGridView(products: products);
+        } else {
+          return Text("Nenhum produto cadastrado na loja!",);
+        }
+      });
   }
 }
 

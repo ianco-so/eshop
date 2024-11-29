@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../components/product_grid.dart';
+import '../model/user.dart';
 import '../utils/app_routes.dart';
 
 enum FilterOptions {
@@ -26,28 +28,30 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
   @override
   Widget build(BuildContext context) {
     //final provider = Provider.of<ProductList>(context);
-
+    final user = Provider.of<User>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.pink,
         title: Text('Minha Loja'),
         actions: [
-          IconButton(
+          user.isLoggedIn ? IconButton(
             onPressed: () {
               Navigator.of(context).pushNamed(
                 AppRoutes.PRODUCT_FORM,
               );
             },
-            icon: Icon(Icons.add)
-          ),
-          IconButton(
+            icon: Icon(Icons.add),
+          )
+          : Container(),
+          user.isLoggedIn ? IconButton(
             onPressed: () {
               Navigator.of(context).pushNamed(
                 AppRoutes.CART,
               );
             },
             icon: Icon(Icons.shopping_cart)
-          ),
+          )
+          : Container(),
           PopupMenuButton(
             icon: Icon(Icons.more_vert),
             itemBuilder: (_) => [
@@ -73,6 +77,48 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
             },
           ),
         ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.pink,
+              ),
+              child: Text(
+                'Minha Loja',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.person),
+              title: Consumer<User>(
+                builder: (ctx, user, _) => Text(
+                  user.isLoggedIn ? '${user.username}' : 'Login',
+                ),
+              ),
+              onTap: () {
+                Navigator.of(context).pushNamed(
+                  AppRoutes.PROFILE, // Define this route in your app routes
+                );
+              },
+            ),
+            // Orders
+            user.isLoggedIn ? ListTile(
+              leading: Icon(Icons.shopping_cart),
+              title: Text('Meus Pedidos'),
+              onTap: () {
+                Navigator.of(context).pushNamed(
+                  AppRoutes.ORDERS, // Define this route in your app routes
+                );
+              },
+            ) : Container(),
+          ],
+        ),
       ),
       body: ProductGrid(_showOnlyFavorites),
     );

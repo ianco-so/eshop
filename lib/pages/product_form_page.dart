@@ -29,6 +29,13 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
   //O método é chamado pela primeira vez logo após o initState. Isso ocorre porque o widget precisa verificar se possui dependências herdadas.
   //Ele é utilizado para responder a mudanças no contexto ou dependências herdadas,
+  Product _product = Product(
+    id: '',
+    title: '',
+    description: '',
+    price: 0.0,
+    imageUrl: '',
+  );
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -37,14 +44,15 @@ class _ProductFormPageState extends State<ProductFormPage> {
       final arg = ModalRoute.of(context)?.settings.arguments;
 
       if (arg != null) {
-        final product = arg as Product;
-        _formData['id'] = product.id;
-        _formData['title'] = product.title;
-        _formData['price'] = product.price;
-        _formData['description'] = product.description;
-        _formData['imageUrl'] = product.imageUrl;
+        final productId = arg as String;
+        _product = Provider.of<ProductList>(context, listen: false).findProductById(productId);
+        _formData['id'] = _product.id;
+        _formData['title'] = _product.title;
+        _formData['price'] = _product.price;
+        _formData['description'] = _product.description;
+        _formData['imageUrl'] = _product.imageUrl;
 
-        _imageUrlController.text = product.imageUrl;
+        _imageUrlController.text = _product.imageUrl;
       }
     }
   }
@@ -79,15 +87,19 @@ class _ProductFormPageState extends State<ProductFormPage> {
     if (!isValid) {
       return;
     }
-
     _formKey.currentState?.save();
-
-    Provider.of<ProductList>(
-      context,
-      listen: false,
-    ).saveProduct(_formData).then((value) {
+    final productList = Provider.of<ProductList>(context, listen: false,);
+    if (_formData['id'] == null) {
+      productList.addProduct(_formData).then((value) {Navigator.of(context).pop(value);});
+    } else {
+      final product = Product.fromJson(
+        _formData['id'].toString(),
+        _formData
+      );
+      // product.
+      productList.updateProduct(product);
       Navigator.of(context).pop();
-    });
+    }
   }
 
   @override
@@ -109,7 +121,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
           child: ListView(
             children: [
               TextFormField(
-                initialValue: _formData['name']?.toString(),
+                initialValue: _formData['title']?.toString(),
                 decoration: InputDecoration(
                   labelText: 'Nome',
                 ),
@@ -117,15 +129,15 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_priceFocus);
                 },
-                onSaved: (name) => _formData['name'] = name ?? '',
-                validator: (_name) {
-                  final name = _name ?? '';
+                onSaved: (title) => _formData['title'] = title ?? '',
+                validator: (_title) {
+                  final title = _title ?? '';
 
-                  if (name.trim().isEmpty) {
+                  if (title.trim().isEmpty) {
                     return 'Nome é obrigatório';
                   }
 
-                  if (name.trim().length < 3) {
+                  if (title.trim().length < 3) {
                     return 'Nome precisa no mínimo de 3 letras.';
                   }
 

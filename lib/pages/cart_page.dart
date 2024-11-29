@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../model/cart.dart';
+import '../model/order.dart';
+import '../model/order_list.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key});
@@ -86,6 +88,7 @@ class _CartTotal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<Cart>(context);
+    final orders = Provider.of<OrderList>(context);
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -103,12 +106,32 @@ class _CartTotal extends StatelessWidget {
           ElevatedButton(
             onPressed: cart.products.isEmpty
                 ? null
-                : () {
-                    // Handle checkout logic here
+                // await orders.addOrder(order);
+                : () async {
+                    // Create an order
+                    final order = Order.fromCart(cart);
+                    print (order);
+                    await orders.addOrder(order);
+                    print("=====================================");
+                    print (orders);
+                    print("=====================================");
+                    cart.clear();
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Checkout not implemented yet!')),
+                      const SnackBar(content: Text('Order placed!')),
                     );
+                    Navigator.of(context).pop();
                   },
+
+                // : () async {
+                //     // Create an order
+                //     final order = Order.fromCart(cart);
+                //     await orders.addOrder(order);
+                //     cart.clear();
+                //     ScaffoldMessenger.of(context).showSnackBar(
+                //       const SnackBar(content: Text('Order placed!')),
+                //     );
+                //     Navigator.of(context).pop();
+                //   },
             child: const Text('Checkout'),
           ),
         ],
